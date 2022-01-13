@@ -5,16 +5,19 @@ It will also predict the final time, as well as visualise some useful satistics
 
 import argparse
 import time
-import sys
 
 import plotext as plt
 import numpy as np
 
 from typing import List
 from math import ceil
+# TODO: add a Table next to the plots
+from rich.console import Console
+from rich.table import Table
 
 
-ordinal = lambda n: "%d%s" % (n, "tsnrhtdd" [(n // 10 % 10 != 1) * (n % 10 < 4) * n % 10::4])
+def ordinal(n: int):
+    return "%d%s" % (n, "tsnrhtdd"[(n // 10 % 10 != 1) * (n % 10 < 4) * n % 10::4])
 
 
 def welcome_print(gender: str, length: int, prediction_method: str, accumulate: str, save: str):
@@ -54,8 +57,8 @@ def track_race(names: List[str], nr_laps: int):
     for i in range(nr_laps):
         correct = False
         while not correct:
-            time = np.array([float(t) for t in input(f"Lap times of {ordinal(i+1)} lap:").replace(" ", "").split(",")])
-            if time.shape[0] != n_athletes:
+            lap_time = np.array([float(t) for t in input(f"Lap times of {ordinal(i+1)} lap:").replace(" ", "").split(",")])
+            if lap_time.shape[0] != n_athletes:
                 print("ERROR: you need to enter the correct amount of times!")
             else:
                 correct = True
@@ -72,7 +75,7 @@ def plot_race(gender: str, length: int, names: List[str], lap_times: np.array):
     :param lap_times:
     :return:
     """
-    gender_name = "Men" if gender == "men" else "Women"
+    gender_name = "Men" if gender == "M" else "Women"
     title_names = " vs ".join(names)
     nr_athletes = len(names)
     nr_laps = lap_times.shape[1]
