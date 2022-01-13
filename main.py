@@ -63,7 +63,7 @@ def track_race(names: List[str], nr_laps: int):
                 print("ERROR: you need to enter the correct amount of times!")
             else:
                 correct = True
-                times[:, i] = time
+                times[:, i] = lap_time
     print(times)
     return times
 
