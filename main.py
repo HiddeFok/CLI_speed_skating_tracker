@@ -11,7 +11,8 @@ import numpy as np
 
 from typing import List
 from math import ceil
-# TODO: add a Table next to the plots
+# TODO: add a Table next to the plots using
+# https://github.com/piccolomo/plotext/issues/26
 from rich.console import Console
 from rich.table import Table
 
