@@ -11,10 +11,15 @@ import numpy as np
 
 from typing import List
 from math import ceil
+from art import ascii_art
+
 # TODO: add a Table next to the plots using
 # https://github.com/piccolomo/plotext/issues/26
 from rich.console import Console
 from rich.table import Table
+
+
+console = Console(width=98)
 
 
 def ordinal(n: int):
@@ -33,9 +38,9 @@ def welcome_print(gender: str, length: int, prediction_method: str, accumulate: 
     gender_name = "Men" if gender == "M" else "Women"
     accumulated = "be accumulated" if accumulate == "y" else "not be accumulated"
     save_text = "be saved" if save == "y" else "not be saved"
-    print("\033[F")
-    print(
-        f"Welcome to this CLI speed skate race tracker!"
+    console.print(ascii_art, style="bold white on blue", justify="left", highlight=False)
+    console.print(
+        f"Welcome to this CLI speed skate race tracker!\n"
         f"I will start tracking the race with the following parameters:\n\n"
         f"\t-- {gender_name}'s {length}m race,\n"
         f"\t-- Predictions will be made with {prediction_method},\n"
