@@ -1,7 +1,7 @@
 from rich.layout import Layout
 from rich.live import Live
 from rich.ansi import AnsiDecoder
-from rich.console import RenderGroup
+from rich.console import Group as RenderGroup
 from rich.jupyter import JupyterMixin
 from rich.panel import Panel
 
@@ -36,7 +36,7 @@ def make_layout():
         Layout(name="main", ratio=1),
     )
     layout["main"].split_row(
-        Layout(name="plotext", size=120),
+        Layout(name="plotext", size=60),
         Layout(name="main_right"),
     )
     return layout
