@@ -1,3 +1,6 @@
 .DS_store
 .idea
 data_scraper
+
+src/skate_data
+**/__pycache__

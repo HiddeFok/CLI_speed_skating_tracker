@@ -5,25 +5,19 @@ It will also predict the final time, as well as visualise some useful satistics
 
 import argparse
 import time
+import os
 
 import plotext as plt
 import numpy as np
 
 from typing import List
 from math import ceil
-from art import ascii_art
 
-# TODO: add a Table next to the plots using
-# https://github.com/piccolomo/plotext/issues/26
-from rich.console import Console
-from rich.table import Table
+from rich import print
 
-
-console = Console(width=98)
-
-
-def ordinal(n: int):
-    return "%d%s" % (n, "tsnrhtdd"[(n // 10 % 10 != 1) * (n % 10 < 4) * n % 10::4])
+from layout import *
+from utils import *
+from plot import create_plotext_panel
 
 
 def welcome_print(gender: str, length: int, prediction_method: str, accumulate: str, save: str):
@@ -38,75 +32,141 @@ def welcome_print(gender: str, length: int, prediction_method: str, accumulate: 
     gender_name = "Men" if gender == "M" else "Women"
     accumulated = "be accumulated" if accumulate == "y" else "not be accumulated"
     save_text = "be saved" if save == "y" else "not be saved"
-    console.print(ascii_art, style="bold white on blue", justify="left", highlight=False)
-    console.print(
-        f"Welcome to this CLI speed skate race tracker!\n"
+
+    # console.print(ascii_art, style="bold white on blue", justify="left", highlight=False)
+    panel = Panel(
         f"I will start tracking the race with the following parameters:\n\n"
         f"\t-- {gender_name}'s {length}m race,\n"
         f"\t-- Predictions will be made with {prediction_method},\n"
         f"\t-- The results will {accumulated},\n"
-        f"\t-- The results will {save_text}.\n\n"
-        f"During every race, you will be able to track one athlete or both athletes. Indicate which one you want by "
-        f"typing the name(s) of the athlete(s) in a comma separated fashion\n")
+        f"\t-- The results will {save_text}.\n\n",
+        title="CLI speed skate race tracker",
+        padding=(2, 2),
+        border_style="green"
+    )
+
+    return panel
 
 
-def track_race(names: List[str], nr_laps: int):
+def make_instruction_panel():
+    panel = Panel(
+        Align.center(
+            f"During every race, you will be able to track one athlete or both athletes.\n\n"
+            f"Indicate which one you want by typing the name(s) of the athlete(s) in a comma separated fashion",
+            vertical="middle"
+        ),
+        title="Instructions",
+        padding=(2, 2),
+        border_style="red",
+    )
+    return panel
+
+
+def create_race_view(
+        gender: str,
+        names: List[str],
+        times: np.array,
+        nr_laps: int,
+        best_names: List[str],
+        best_times: np.array,
+        race_layout: Layout,
+        first: bool=False,
+        final: bool=False):
+    """
+    :param gender:
+    :param names:
+    :param times:
+    :param nr_laps:
+    :param best_names:
+    :param best_times:
+    :param race_layout:
+    :param first:
+    :param final:
+    :return:
     """
 
+    plotext_layout = race_layout["plotext"]
+    current_race_layout = race_layout["main"]["current_race"]
+    best_results_layout = race_layout["main"]["best_results"]
+    progress_layout = race_layout["progress"]
+
+    if first:
+        progress_panel = create_progress_panel(nr_laps)
+        progress_layout.update(progress_panel)
+    else:
+        if not final:
+            progress_panel = progress_layout.renderable
+            progress_panel.renderable.renderable.advance(progress_panel.renderable.renderable.task_ids[0])
+            progress_layout.update(progress_panel)
+
+    _ = create_plotext_panel(
+        gender,
+        nr_laps,
+        names,
+        times,
+        plotext_layout
+    )
+
+    table_progression = create_progress_table(names, times, best_times)
+    table_best_results = create_best_table(best_names, best_times)
+
+    current_race_layout.update(table_progression)
+    best_results_layout.update(table_best_results)
+
+
+def track_race(gender: str, names: List[str], nr_laps: int, best_names: List[str], best_times: np.array) -> np.array:
+    """
+    :param gender:
     :param names:
     :param nr_laps:
+    :param best_names:
+    :param best_times:
     :return:
     """
     n_athletes = len(names)
-
     times = np.zeros((len(names), nr_laps))
+
+    race_layout = make_race_layout()
+    create_race_view(
+        gender,
+        names,
+        times,
+        nr_laps,
+        best_names,
+        best_times,
+        race_layout,
+        first=True
+    )
+    print(race_layout)
+    # for i in track(range(nr_laps), description="Lap number"):
     for i in range(nr_laps):
         correct = False
         while not correct:
-            lap_time = np.array([float(t) for t in input(f"Lap times of {ordinal(i+1)} lap:").replace(" ", "").split(",")])
-            if lap_time.shape[0] != n_athletes:
-                print("ERROR: you need to enter the correct amount of times!")
+            try:
+                lap_time = np.array([float(t) for t in input(f"Lap times of {ordinal(i+1)} lap:").replace(" ", "").split(",")])
+            except ValueError:
+                print("ERROR: You need to enter numbers!")
             else:
-                correct = True
-                times[:, i] = lap_time
-    print(times)
-    return times
+                if lap_time.shape[0] != n_athletes:
+                    print("ERROR: you need to enter the correct amount of times!")
+                # elif any(isinstance(t, ))
 
+                else:
+                    correct = True
+                    times[:, i] = lap_time
 
-def plot_race(gender: str, length: int, names: List[str], lap_times: np.array):
-    """
-    :param gender:
-    :param length:
-    :param names:
-    :param lap_times:
-    :return:
-    """
-    gender_name = "Men" if gender == "M" else "Women"
-    title_names = " vs ".join(names)
-    nr_athletes = len(names)
-    nr_laps = lap_times.shape[1]
-    plt.subplots(1, 2)
-
-    total_times = np.cumsum(lap_times, axis=1)
-    # TODO: layouting (colors, markers, etc)
-    # Plot of the total
-    plt.subplot(1, 1)
-    for i in range(nr_athletes):
-        plt.plot(total_times[i, :])
-    plt.title(f"{gender_name}'s {length}m race total times: {title_names}")
-    plt.xticks(list(range(nr_laps)))
-
-    # Plot of the lap times
-    plt.subplot(1, 2)
-    for i in range(nr_athletes):
-        plt.plot(lap_times[i, :])
-    plt.title(f"{gender_name}'s {length}m race lap times: {title_names}")
-    plt.xticks(list(range(nr_laps)))
-    plt.show()
-
-    time.sleep(2)
-    plt.clear_terminal()
-    time.sleep(2)
+                os.system("clear")
+                create_race_view(
+                    gender,
+                    names,
+                    times,
+                    nr_laps,
+                    best_names,
+                    best_times,
+                    race_layout
+                )
+                print(race_layout)
+    return times, race_layout
 
 
 def main(gender: str, length: int, prediction_method: str, accumulate: str, save: str):
@@ -125,17 +185,69 @@ def main(gender: str, length: int, prediction_method: str, accumulate: str, save
     if gender == "F" and length == 10000:
         raise ValueError("This combination is not a valid race!")
 
-    welcome_print(gender, length, prediction_method, accumulate, save)
+    use = check_saved(gender, length)
+
+    welcome_panel = welcome_print(gender, length, prediction_method, accumulate, save)
+    instruction_panel = make_instruction_panel()
+
+    layout_start = make_start_layout()
+    layout_start["header"].update(Header())
+    layout_start["main"]["side"].update(instruction_panel)
+    layout_start["main"]["body"].update(welcome_panel)
+    print(layout_start)
+    # welcome_print(gender, length, prediction_method, accumulate, save)
 
     nr_laps = ceil(length / 400)
     tracking = True
 
+    best_names = ["None", "None", "None"]
+    best_times = np.zeros((3, nr_laps))
+
+    if use == "y":
+        all_names, all_results = load_results(gender=gender, length=length)
+        best_names, best_times = update_best_times(all_names, all_results, best_names, best_times)
+    else:
+        all_names = []
+        all_results = []
+
     while tracking:
-        names = input("The names are:").replace(" ", "").split(",")
-        print(names)
-        lap_times = track_race(names, nr_laps)
-        plot_race(gender, length, names, lap_times)
-        tracking = False
+        names = input("The names of the athletes are: ").replace(" ", "").split(",")
+        lap_times, race_layout = track_race(gender, names, nr_laps, best_names, best_times)
+        best_names, best_times = update_best_times(names, lap_times, best_names, best_times)
+
+        if save == "y":
+            if len(all_names) != 0:
+                all_results = np.vstack((all_results, lap_times))
+                all_names = all_names + names
+                save_results(gender, length, all_names, all_results.T)
+            else:
+                all_results = lap_times
+                all_names = names
+                save_results(gender, length, all_names, all_results.T)
+
+        correct = False
+        while not correct:
+            next_race = input("Do you want to start tracking the next race? [y/n]: ")
+            if not (next_race == "y" or next_race == "n"):
+                print("ERROR: please select a valid response!")
+            else:
+                correct = True
+
+        if next_race == "n":
+            create_race_view(
+                gender,
+                names,
+                lap_times,
+                nr_laps,
+                best_names,
+                best_times,
+                race_layout,
+                final=True
+            )
+            print(race_layout)
+            input("Input anything to quit the Tracker!")
+            tracking = False
+
     return 0
 
 
