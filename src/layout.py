@@ -16,8 +16,8 @@ def make_start_layout() -> Layout:
     layout = Layout(name="root")
 
     layout.split(
-        Layout(name="header", ratio=1),
-        Layout(name="main", size=15),
+        Layout(name="header", ratio=4),
+        Layout(name="main", ratio=3),
     )
     layout["main"].split_row(
         Layout(name="side"),
@@ -29,12 +29,12 @@ def make_start_layout() -> Layout:
 def make_race_layout() -> Layout:
     layout = Layout(name="root")
     layout.split(
-        Layout(name="header", size=3,),
+        Layout(name="header", size=3),
         Layout(name="main", ratio=1),
         Layout(name="progress", size=3)
     )
     layout["main"].split_row(
-        Layout(name="plotext", size=100),
+        Layout(name="plotext", ratio=7),
         Layout(name="current_race", ratio=4),
         Layout(name="best_results", ratio=3)
     )
@@ -74,7 +74,7 @@ def create_progress_table(names: List[str], times: np.array, top_3_times: np.arr
     table_progression.add_column("Best diff", justify="center", no_wrap=True, min_width=10)
 
     best_lap_times = top_3_times[0, :]
-    diff = -1 * times + best_lap_times
+    diff = times - best_lap_times
     times = np.vstack((times, diff))
 
     colors = ("bright_red", "bright_cyan")
@@ -84,12 +84,12 @@ def create_progress_table(names: List[str], times: np.array, top_3_times: np.arr
             table_progression.add_row("NA", "NA", "NA", "NA")
         else:
             colors_race = (colors[1 - int(col[0] > col[1])], colors[int(col[0] > col[1])])
-            color_diff_1 = colors[1 - int(col[0] < col[2])]
-            color_diff_2 = colors[1 - int(col[1] < col[3])]
+            color_diff_1 = colors[1 - int(col[2] > 0)]
+            color_diff_2 = colors[1 - int(col[3] > 0)]
             item_1 = f"[{colors_race[0]}]{col[0]}"
-            item_2 = f"[{color_diff_1}]{col[2]}"
+            item_2 = f"[{color_diff_1}]{col[2]}" if col[2] < 0 else f"[{color_diff_1}]+{col[2]}"
             item_3 = f"[{colors_race[1]}]{col[1]}"
-            item_4 = f"[{color_diff_2}]{col[3]}"
+            item_4 = f"[{color_diff_2}]{col[3]}" if col[3] < 0 else f"[{color_diff_2}]+{col[3]}"
             table_progression.add_row(item_1, item_2, item_3, item_4)
 
     panel_progression = Panel(
@@ -101,6 +101,7 @@ def create_progress_table(names: List[str], times: np.array, top_3_times: np.arr
 
 
 def create_best_table(names: List[str], times: np.array) -> Panel:
+    print(names)
     table_best = Table(
         title="Best times so far",
         show_footer=True)

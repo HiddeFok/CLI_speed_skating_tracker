@@ -2,15 +2,7 @@
 CLI tool (python module) that helps you track lap times during a speed skating race.
 It will also predict the final time, as well as visualise some useful satistics
 """
-
 import argparse
-import time
-import os
-
-import plotext as plt
-import numpy as np
-
-from typing import List
 from math import ceil
 
 from rich import print
@@ -20,14 +12,18 @@ from utils import *
 from plot import create_plotext_panel
 
 
-def welcome_print(gender: str, length: int, prediction_method: str, accumulate: str, save: str):
-    """
-    :param gender:
-    :param length:
-    :param prediction_method:
-    :param accumulate:
-    :param save:
-    :return:
+def welcome_print(gender: str, length: int, prediction_method: str, accumulate: str, save: str) -> Panel:
+    """Prints a welcome message showing what parameters have been set and wat will happen next.
+
+    :param str gender: string indicating if the race is for Men or Women. Accepted values are ["M", "F"]
+    :param int length: integer indicating the length of the race. Accepted values are [500, 1000, 1500, 3000, 5000,
+    10000]
+    :param str prediction_method: string indicating which prediction method to use. NOT IMPLEMENTED YET
+    :param str accumulate: string which indicates if all previous results should also be shown. Accepted values
+    ["y", "n"]. NOT IMPLEMENTED YET
+    :param str save: string which indicates if the results after each race should be saved to a csv file. If the user
+    exits the tool and restarts it again with the same settings, it will use this file to load the previous results
+    :return rich.Panel: returns a rich.Panel with the welcome message
     """
     gender_name = "Men" if gender == "M" else "Women"
     accumulated = "be accumulated" if accumulate == "y" else "not be accumulated"
@@ -48,7 +44,11 @@ def welcome_print(gender: str, length: int, prediction_method: str, accumulate: 
     return panel
 
 
-def make_instruction_panel():
+def make_instruction_panel() -> Panel:
+    """Prints the instruction message showing what the user has to do next
+
+    :return rich.Panel: returns a rich.Panel with the instruction message
+    """
     panel = Panel(
         Align.center(
             f"During every race, you will be able to track one athlete or both athletes.\n\n"
@@ -70,19 +70,23 @@ def create_race_view(
         best_names: List[str],
         best_times: np.array,
         race_layout: Layout,
-        first: bool=False,
-        final: bool=False):
-    """
-    :param gender:
-    :param names:
-    :param times:
-    :param nr_laps:
-    :param best_names:
-    :param best_times:
-    :param race_layout:
-    :param first:
-    :param final:
-    :return:
+        first: bool = False,
+        final: bool = False) -> None:
+    """Creates the main race view and layout.
+
+    :param gender: string indicating if the race is for Men or Women. Accepted values are ["M", "F"].
+    :type gender: str
+    :param List[str] names: List of strings with the names of the athletes.
+    :param np.array times: Numpy array with the times so far.
+    :param int nr_laps: integer indicating how many laps this race is going to take.
+    :param List[str] best_names: List of strings with the names of the best athletes so far.
+    :param np.array best_times: Numpy array with the best times so far.
+    :param rich.Layout race_layout: rich.Layout object with the prescribed layout for all the tables and plots
+    :param bool first: Boolean indicating if this is the first time making the view. Otherwise, the progress bar will
+    be advanced instead of initiated.
+    :param bool final: Boolean indicating if this is the final time the view will be shown. THe progress bar does not
+    need to be progressed or initiated then.
+    :return None: Nothing
     """
 
     plotext_layout = race_layout["plotext"]

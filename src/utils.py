@@ -73,14 +73,14 @@ def save_results(gender: str, length: int, names: List[str], times: np.array):
 def load_results(fname=None, gender=None, length=None) -> (List[str], np.array):
     if fname is not None:
         with open(fname) as f:
-            names = f.readline().split(",")
+            names = f.readline().rstrip().split(",")
         results = np.loadtxt(fname, delimiter=",", skiprows=1)
     else:
         if gender is not None and length is not None:
             gender_name = "Men" if gender == "M" else "Women"
             fname = os.path.join(os.getcwd(), 'skate_data', f"race_{gender_name}_{length}m_data.csv")
             with open(fname) as f:
-                names = f.readline().split(",")
+                names = f.readline().rstrip().split(",")
             results = np.loadtxt(fname, delimiter=",", skiprows=1)
         else:
             raise ValueError("ERROR: Please insert a valid gender or length")
