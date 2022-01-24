@@ -278,8 +278,8 @@ def main_tracking(tournament: str, gender: str, length: int, prediction_method: 
 
     return 0
 
-def main():
 
+def main():
     parser = argparse.ArgumentParser(
         description="CLI tool to track and predict Speed Skating races"
     )
