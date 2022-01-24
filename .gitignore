@@ -1,6 +1,17 @@
+# system files
 .DS_store
 .idea
 data_scraper
+data
 
-src/skate_data
+# setuptools distribution folder.
+/dist/
+build
+SkateTracker.egg-info
+
+# Test datak
+SkateTracker/skate_data
+
+# Compiled python modules
+*.pyc
 **/__pycache__
