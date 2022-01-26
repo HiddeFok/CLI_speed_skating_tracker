@@ -1,6 +1,6 @@
 # CLI speed skating race tracker
 
-SkateTracker is an CLI that allows you to track and visualise the progress of an ongoing speed skating competition. 
+SkateTracker is a CLI that allows you to track and visualise the progress of an ongoing speed skating competition. 
 
 ![Welcome screen](https://github.com/HiddeFok/CLI_speed_skating_tracker/blob/main/img/welcome_screen.png?raw=true)
 
