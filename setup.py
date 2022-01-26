@@ -7,19 +7,16 @@ def readme():
 
 setup(
     name="SkateTracker",
-    version="0.0.1",
+    version="0.1.1",
     description="CLI tool to track speed skating races",
     long_description=readme(),
+    long_description_content_type="text/markdown",
     author="Hidde Fokkema",
     url="https://github.com/HiddeFok/CLI_speed_skating_tracker",
     license="MIT",
     keywords="CLI sports visualization",
     packages=[
         "SkateTracker"
-        # "SkateTracker.art",
-        # "SkateTracker.layout",
-        # "SkateTracker.plot",
-        # "SkateTracker.utils"
     ],
     python_requires=">=3.5",
     install_requires=[

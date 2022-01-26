@@ -2,7 +2,7 @@
 
 SkateTracker is an CLI that allows you to track and visualise the progress of an ongoing speed skating competition. 
 
-![Welcome screen](https://github.com/HiddeFok/CLI_speed_skating_tracker/blob/main/img/welcome_screen.png)
+![Welcome screen](https://github.com/HiddeFok/CLI_speed_skating_tracker/blob/main/img/welcome_screen.png?raw=true)
 
 ## Requirements
 The package was tested only on a Mac system. So it should at least work for OSX. It will then most likely also worked 
@@ -40,12 +40,13 @@ pip install -r requirements.txt
 SkateTracker has several options you can configure before you start:
 
 * `--tournament`, `-t`, Which is the name of the tournament where the race is taking place. For example, the Winter
-Olympics, a World Cup, or a national championship.
+    Olympics, a World Cup, or a national championship.
+
 * `--gender`, `-g`, if the race is for the Men or the Women. The options are `M` or `F`.
 * `--length`, `-l`, the length of the race, for example 1000, 3000, etc. 
 * `--save`, `-s`, if the results of each race should be saved to a csv. This will allow you to quit the SkateTracker 
-in between races. The options are `y` or `n`. WARNING: Right now the results will be saved in a folder `skate_data` that
-will be located in the directory your terminal is currently in. 
+    in between races. The options are `y` or `n`. WARNING: Right now the results will be saved in a folder `skate_data` that
+    will be located in the directory your terminal is currently in. 
 
 Two more options are in the making. The first will allow you to set a prediction method. SkateTracker will then predict 
 the final time of the race, depending on all the lap times so far of that athlete. The second option allows you
@@ -57,7 +58,7 @@ SkateTracker -t Winter_Olympics -g F -l 1500
 ```
 
 ## Example screen
-[Example](https://github.com/HiddeFok/CLI_speed_skating_tracker/blob/main/img/example_final_screen.png)
+![Example](https://github.com/HiddeFok/CLI_speed_skating_tracker/blob/main/img/example_final_screen.png?raw=true)
 
 ## Acknowledgements
 

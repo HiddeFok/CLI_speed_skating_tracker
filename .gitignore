@@ -3,12 +3,13 @@
 .idea
 data_scraper
 data
+
 # setuptools distribution folder.
 /dist/
 build
 SkateTracker.egg-info
 
-# Test datak
+# Test data
 SkateTracker/skate_data
 
 # Compiled python modules
