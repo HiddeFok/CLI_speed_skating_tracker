@@ -3,7 +3,11 @@ import numpy as np
 
 from typing import List, Optional
 
-from SkateTracker.art import ascii_art
+try:
+    from SkateTracker.art import ascii_art
+except ModuleNotFoundError:
+    from art import ascii_art
+
 
 from rich.table import Table
 from rich.panel import Panel

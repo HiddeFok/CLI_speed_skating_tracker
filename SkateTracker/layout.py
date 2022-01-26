@@ -39,6 +39,8 @@ def make_race_layout() -> Layout:
         Layout(name="current_race", ratio=4),
         Layout(name="best_results", ratio=3)
     )
+    layout["header"].update(Panel("", border_style="navy_blue"))
+
     return layout
 
 
@@ -91,10 +93,10 @@ def create_lap_time_table(names: List[str], times: np.array, top_3_times: np.arr
             colors_race = (colors[1 - int(col[0] > col[1])], colors[int(col[0] > col[1])])
             color_diff_1 = colors[1 - int(col[2] > 0)]
             color_diff_2 = colors[1 - int(col[3] > 0)]
-            item_1 = f"[{colors_race[0]}]{col[0]}"
-            item_2 = f"[{color_diff_1}]{col[2]}" if col[2] < 0 else f"[{color_diff_1}]+{col[2]}"
-            item_3 = f"[{colors_race[1]}]{col[1]}"
-            item_4 = f"[{color_diff_2}]{col[3]}" if col[3] < 0 else f"[{color_diff_2}]+{col[3]}"
+            item_1 = f"[{colors_race[0]}]{col[0]:.2f}"
+            item_2 = f"[{color_diff_1}]{col[2]:.2f}" if col[2] < 0 else f"[{color_diff_1}]+{col[2]:.2f}"
+            item_3 = f"[{colors_race[1]}]{col[1]:.2f}"
+            item_4 = f"[{color_diff_2}]{col[3]:.2f}" if col[3] < 0 else f"[{color_diff_2}]+{col[3]:.2f}"
             table_lap_times.add_row(item_1, item_2, item_3, item_4)
 
     panel_lap_times = Panel(
