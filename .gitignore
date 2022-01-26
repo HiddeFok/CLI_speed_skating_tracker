@@ -3,7 +3,6 @@
 .idea
 data_scraper
 data
-
 # setuptools distribution folder.
 /dist/
 build

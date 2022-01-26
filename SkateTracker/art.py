@@ -1,3 +1,6 @@
+"""
+ASCII art used in the welcome screen
+"""
 # ASCII art from https://www.asciiart.eu/sports-and-outdoors/ice-skating
 
 ascii_art = """
