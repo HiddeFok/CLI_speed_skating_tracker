@@ -43,7 +43,7 @@ def welcome_print(tournament: str, gender: str, length: int, prediction_method: 
         f"I will start tracking the race with the following parameters:\n\n"
         f"\t-- {gender_name}'s {length}m race in {tournament},\n"
         f"\t-- Predictions will be made with {prediction_method},\n"
-        f"\t-- The results will {accumulated},\n"
+#        f"\t-- The results will {accumulated},\n"
         f"\t-- The results will {save_text}.\n\n",
         title="CLI speed skate race tracker",
         padding=(2, 2),
@@ -248,7 +248,14 @@ def main_tracking(tournament: str, gender: str, length: int, prediction_method: 
 
     tracking = True
     while tracking:
-        names = input("The names of the athletes are: ").replace(" ", "").split(",")
+        correct_names = False
+        while not correct_names:
+            names = [name.rstrip() for name in input("The names of the athletes are: ").split(",") if len(name) > 0]
+
+            if len(names) == 1 or len(names) == 2:
+                correct_names = True
+            else: 
+                print("ERROR: Please enter 1 or 2 athletes to track!")
         # A full race is tracked, the lap times and final race view are returned
         lap_times, race_layout = track_race(gender, names, nr_laps, best_names, best_times)
         best_names, best_times = update_best_times(names, lap_times, best_names, best_times)
