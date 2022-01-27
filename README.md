@@ -5,7 +5,7 @@ SkateTracker is a CLI that allows you to track and visualise the progress of an 
 ![Welcome screen](https://github.com/HiddeFok/CLI_speed_skating_tracker/blob/main/img/welcome_screen.png?raw=true)
 
 ## Requirements
-The package was tested a Mac system and a Linux system. So it should run on those systems. 
+The package was tested on a Mac system and on a Linux system. So it should run on those systems. 
 
 On Windows installing the package via `pip` will give you troubles and probably a headache. The easiest solution
 is to clone the directory and run the main script directly or to use WSL 2 (which is the recommended route). 
