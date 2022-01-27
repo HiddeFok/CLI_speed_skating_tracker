@@ -43,7 +43,7 @@ def welcome_print(tournament: str, gender: str, length: int, prediction_method: 
         f"I will start tracking the race with the following parameters:\n\n"
         f"\t-- {gender_name}'s {length}m race in {tournament},\n"
         f"\t-- Predictions will be made with {prediction_method},\n"
-        f"\t-- The results will {accumulated},\n"
+#        f"\t-- The results will {accumulated},\n"
         f"\t-- The results will {save_text}.\n\n",
         title="CLI speed skate race tracker",
         padding=(2, 2),
