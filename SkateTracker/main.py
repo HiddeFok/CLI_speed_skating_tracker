@@ -248,7 +248,14 @@ def main_tracking(tournament: str, gender: str, length: int, prediction_method: 
 
     tracking = True
     while tracking:
-        names = input("The names of the athletes are: ").replace(" ", "").split(",")
+        correct_names = False
+        while not correct_names:
+            names = [name.rstrip() for name in input("The names of the athletes are: ").split(",") if len(name) > 0]
+
+            if len(names) == 1 or len(names) == 2:
+                correct_names = True
+            else: 
+                print("ERROR: Please enter 1 or 2 athletes to track!")
         # A full race is tracked, the lap times and final race view are returned
         lap_times, race_layout = track_race(gender, names, nr_laps, best_names, best_times)
         best_names, best_times = update_best_times(names, lap_times, best_names, best_times)

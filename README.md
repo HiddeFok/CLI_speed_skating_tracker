@@ -57,6 +57,11 @@ An example initialisation is
 SkateTracker -t Winter_Olympics -g F -l 1500
 ```
 
+### Window size
+
+To have an optimal experience it is recommended to make the window of your terminal large. Some parts of the layout
+are statically rendered. So, the formatting will not scale with your window size.
+
 ## Example screen
 ![Example](https://github.com/HiddeFok/CLI_speed_skating_tracker/blob/main/img/example_final_screen.png?raw=true)
 
