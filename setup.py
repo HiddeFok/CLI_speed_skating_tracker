@@ -7,7 +7,7 @@ def readme():
 
 setup(
     name="SkateTracker",
-    version="0.1.1",
+    version="0.1.2",
     description="CLI tool to track speed skating races",
     long_description=readme(),
     long_description_content_type="text/markdown",
