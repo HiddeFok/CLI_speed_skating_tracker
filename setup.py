@@ -20,9 +20,9 @@ setup(
     ],
     python_requires=">=3.5",
     install_requires=[
-        "numpy==1.22.0",
-        "plotext==4.1.5",
-        "rich==11.0.0"
+        "numpy>=1.18.4",
+        "plotext>=4.0.0",
+        "rich>=11.0.0"
     ],
     entry_points={
         "console_scripts": [
