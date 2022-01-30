@@ -169,7 +169,9 @@ def track_race(
         correct = False
         while not correct:
             try:
-                lap_time = np.array([float(t) for t in input(f"Lap times of {ordinal(i+1)} lap:").replace(" ", "").split(",")])
+                lap_time = np.array([
+                    float(t) for t in input(f"Lap times of {ordinal(i+1)} lap:").replace(" ", "").split(",")
+                    ])
             except ValueError:
                 print("ERROR: You need to enter numbers!")
             else:
@@ -180,19 +182,19 @@ def track_race(
                     correct = True
                     times[:, i] = lap_time
 
-                # For now the view is erased and updated each time. The reason being that rich.Live does not work
-                # nicely with input and a progress bar. (As far as I could figure out)
-                os.system("clear")
-                create_race_view(
-                    gender,
-                    names,
-                    times,
-                    nr_laps,
-                    best_names,
-                    best_times,
-                    race_layout
-                )
-                print(race_layout)
+        # For now the view is erased and updated each time. The reason being that rich.Live does not work
+        # nicely with input and a progress bar. (As far as I could figure out)
+        os.system("clear")
+        create_race_view(
+            gender,
+            names,
+            times,
+            nr_laps,
+            best_names,
+            best_times,
+            race_layout
+        )
+        print(race_layout)
     return times, race_layout
 
 

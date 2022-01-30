@@ -102,7 +102,7 @@ def load_results(
         fname: Optional[str] = None) -> (List[str], np.array):
     """Loads the results if a specific file is specified, or from a given set of parameters
 
-    :param str tournament:
+    :param str tournament: string with the name of the tournament where the race is being held.
     :param (str, None) fname: string of a previously recorded race.
     :param (str, None) gender: string indicating if the race is for Men or Women. Accepted values are ["M", "F"]
     :param (int, None) length: integer indicating the length of the race. Accepted values are
@@ -117,7 +117,7 @@ def load_results(
     else:
         if gender is not None and length is not None:
             gender_name = "Men" if gender == "M" else "Women"
-            fname = os.path.join(os.getcwd(), 'skate_data', f"race_{gender_name}_{length}m_data.csv")
+            fname = os.path.join(os.getcwd(), 'skate_data', f"{tournament}_race_{gender_name}_{length}m_data.csv")
             with open(fname) as f:
                 names = f.readline().rstrip().split(",")
             results = np.loadtxt(fname, delimiter=",", skiprows=1)

@@ -59,26 +59,28 @@ def create_lap_time_table(names: List[str], times: np.array, top_3_times: np.arr
     )
 
     total_times = times.sum(axis=1)
-    table_lap_times.add_column(
-        names[0],
-        justify="center",
-        no_wrap=True,
-        min_width=10,
-        header_style="red",
-        style="red",
-        footer=f"{str(timedelta(seconds=total_times[0]))[2:10]}"
-    )
-    table_lap_times.add_column("Best diff", justify="center", no_wrap=True, min_width=10)
-    table_lap_times.add_column(
-        names[1],
-        justify="center",
-        no_wrap=True,
-        min_width=10,
-        header_style="blue",
-        style="blue",
-        footer=f"{str(timedelta(seconds=total_times[1]))[2:10]}"
-    )
-    table_lap_times.add_column("Best diff", justify="center", no_wrap=True, min_width=10)
+    header_colors = ("red", "blue")
+    for i, name in enumerate(names):
+        table_lap_times.add_column(
+            name,
+            justify="center",
+            no_wrap=True,
+            min_width=10,
+            header_style=header_colors[i],
+            style=header_colors[i],
+            footer=f"{str(timedelta(seconds=total_times[i]))[2:10]}"
+        )
+        table_lap_times.add_column("Best diff", justify="center", no_wrap=True, min_width=10)
+    # table_lap_times.add_column(
+    #     names[1],
+    #     justify="center",
+    #     no_wrap=True,
+    #     min_width=10,
+    #     header_style="blue",
+    #     style="blue",
+    #     footer=f"{str(timedelta(seconds=total_times[1]))[2:10]}"
+    # )
+    # table_lap_times.add_column("Best diff", justify="center", no_wrap=True, min_width=10)
 
     best_lap_times = top_3_times[0, :]
     diff = times - best_lap_times
@@ -87,18 +89,26 @@ def create_lap_time_table(names: List[str], times: np.array, top_3_times: np.arr
     colors = ("bright_red", "bright_cyan")
 
     for col in times.T:
-        if col[0] == 0 and col[1] == 0:
-            table_lap_times.add_row("NA", "NA", "NA", "NA")
+        if len(names) == 2:
+            if col[0] == 0 and col[1] == 0:
+                table_lap_times.add_row("NA", "NA", "NA", "NA")
+            else:
+                colors_race = (colors[1 - int(col[0] > col[1])], colors[int(col[0] > col[1])])
+                color_diff_1 = colors[1 - int(col[2] > 0)]
+                color_diff_2 = colors[1 - int(col[3] > 0)]
+                item_1 = f"[{colors_race[0]}]{col[0]:.2f}"
+                item_2 = f"[{color_diff_1}]{col[2]:.2f}" if col[2] < 0 else f"[{color_diff_1}]+{col[2]:.2f}"
+                item_3 = f"[{colors_race[1]}]{col[1]:.2f}"
+                item_4 = f"[{color_diff_2}]{col[3]:.2f}" if col[3] < 0 else f"[{color_diff_2}]+{col[3]:.2f}"
+                table_lap_times.add_row(item_1, item_2, item_3, item_4)
         else:
-            colors_race = (colors[1 - int(col[0] > col[1])], colors[int(col[0] > col[1])])
-            color_diff_1 = colors[1 - int(col[2] > 0)]
-            color_diff_2 = colors[1 - int(col[3] > 0)]
-            item_1 = f"[{colors_race[0]}]{col[0]:.2f}"
-            item_2 = f"[{color_diff_1}]{col[2]:.2f}" if col[2] < 0 else f"[{color_diff_1}]+{col[2]:.2f}"
-            item_3 = f"[{colors_race[1]}]{col[1]:.2f}"
-            item_4 = f"[{color_diff_2}]{col[3]:.2f}" if col[3] < 0 else f"[{color_diff_2}]+{col[3]:.2f}"
-            table_lap_times.add_row(item_1, item_2, item_3, item_4)
-
+            if col[0] == 0:
+                table_lap_times.add_row("NA", "NA")
+            else:
+                color_diff_1 = colors[1 - int(col[1] > 0)]
+                item_1 = f"[{color_diff_1}]{col[0]:.2f}"
+                item_2 = f"[{color_diff_1}]{col[1]:.2f}" if col[1] < 0 else f"[{color_diff_1}]+{col[1]:.2f}"
+                table_lap_times.add_row(item_1, item_2)
     panel_lap_times = Panel(
         Align.center(table_lap_times, vertical="top"),
         border_style="bright_red"
