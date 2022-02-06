@@ -75,6 +75,7 @@ def create_race_view(
         gender: str,
         names: List[str],
         times: np.array,
+        length: int,
         nr_laps: int,
         best_names: List[str],
         best_times: np.array,
@@ -86,6 +87,9 @@ def create_race_view(
     :param str gender: string indicating if the race is for Men or Women. Accepted values are ["M", "F"].
     :param List[str] names: List of strings with the names of the athletes.
     :param np.array times: Numpy array with the times so far.
+    :param int length: integer indicating the length of the race. Accepted values are
+     [500, 1000, 1500, 3000, 5000, 10000]
+
     :param int nr_laps: integer indicating how many laps this race is going to take.
     :param List[str] best_names: List of strings with the names of the best athletes so far.
     :param np.array best_times: Numpy array with the best times so far.
@@ -118,7 +122,7 @@ def create_race_view(
 
     _ = create_plotext_panel(
         gender,
-        nr_laps,
+        length,
         names,
         times,
         plotext_layout
@@ -134,6 +138,7 @@ def create_race_view(
 def track_race(
         gender: str,
         names: List[str],
+        length: int,
         nr_laps: int,
         best_names: List[str],
         best_times: np.array) -> (np.array, Layout):
@@ -142,6 +147,9 @@ def track_race(
 
     :param str gender: string indicating if the race is for Men or Women. Accepted values are ["M", "F"]
     :param List[str] names: List of strings with the names of the athletes.
+    :param int length: integer indicating the length of the race. Accepted values are
+     [500, 1000, 1500, 3000, 5000, 10000]
+
     :param int nr_laps: integer indicating how many laps this race is going to take.
     :param List[str] best_names: List of strings with the names of the best athletes so far.
     :param np.array best_times: Numpy array with the best times so far.
@@ -157,6 +165,7 @@ def track_race(
         gender,
         names,
         times,
+        length,
         nr_laps,
         best_names,
         best_times,
@@ -189,6 +198,7 @@ def track_race(
             gender,
             names,
             times,
+            length,
             nr_laps,
             best_names,
             best_times,
@@ -259,7 +269,7 @@ def main_tracking(tournament: str, gender: str, length: int, prediction_method: 
             else: 
                 print("ERROR: Please enter 1 or 2 athletes to track!")
         # A full race is tracked, the lap times and final race view are returned
-        lap_times, race_layout = track_race(gender, names, nr_laps, best_names, best_times)
+        lap_times, race_layout = track_race(gender, names, length, nr_laps, best_names, best_times)
         best_names, best_times = update_best_times(names, lap_times, best_names, best_times)
 
         if save == "y":
@@ -285,6 +295,7 @@ def main_tracking(tournament: str, gender: str, length: int, prediction_method: 
                 gender,
                 names,
                 lap_times,
+                length,
                 nr_laps,
                 best_names,
                 best_times,

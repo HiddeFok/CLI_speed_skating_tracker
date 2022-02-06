@@ -55,7 +55,7 @@ def plot_race(gender: str, length: int, names: List[str], lap_times: np.array, *
             athlete_times = lap_times[i, lap_times[i, :] > 0]
         plt.plot(athlete_times, color=colors[i])
     plt.plotsize(*size)
-    plt.ylim(5, 35)
+    plt.ylim(20, 35)
     plt.title(f"{gender_name}'s {length}m race lap times: {title_names}")
     plt.xticks(list(range(nr_laps)))
     plt.xlim(1, nr_laps)
@@ -102,7 +102,7 @@ def create_plotext_panel(
         names: List[str],
         lap_times: np.array,
         layout: Layout) -> Panel:
-    """Creates the actual ponel with the plotext in it. The layouy that is supplied will be used to put the panel into.
+    """Creates the actual panel with the plotext in it. The layout that is supplied will be used to put the panel into.
 
     :param str gender: string indicating if the race is for Men or Women. Accepted values are ["M", "F"]
     :param int length: integer indicating the length of the race. Accepted values are
