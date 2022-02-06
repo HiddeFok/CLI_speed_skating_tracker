@@ -60,6 +60,13 @@ def create_lap_time_table(names: List[str], times: np.array, top_3_times: np.arr
 
     total_times = times.sum(axis=1)
     header_colors = ("red", "blue")
+    best_lap_times = top_3_times[0, :]
+    diff = times - best_lap_times
+    print(diff)
+    print(times > 0)
+    total_diff = diff[times > 0, None].reshape(2,-1).sum(axis=1) if np.any(times > 0) else np.array([0, 0])
+    colors = ("bright_red", "bright_cyan")
+    print(total_diff)
     for i, name in enumerate(names):
         table_lap_times.add_column(
             name,
@@ -70,23 +77,17 @@ def create_lap_time_table(names: List[str], times: np.array, top_3_times: np.arr
             style=header_colors[i],
             footer=f"{str(timedelta(seconds=total_times[i]))[2:10]}"
         )
-        table_lap_times.add_column("Best diff", justify="center", no_wrap=True, min_width=10)
-    # table_lap_times.add_column(
-    #     names[1],
-    #     justify="center",
-    #     no_wrap=True,
-    #     min_width=10,
-    #     header_style="blue",
-    #     style="blue",
-    #     footer=f"{str(timedelta(seconds=total_times[1]))[2:10]}"
-    # )
-    # table_lap_times.add_column("Best diff", justify="center", no_wrap=True, min_width=10)
+        color_diff = colors[1 - int(total_diff[i] > 0)]
+        footer = f"[{color_diff}]{total_diff[i]:.2f}" if total_diff[i] < 0 else f"[{color_diff}]+{total_diff[i]:.2f}"
+        table_lap_times.add_column(
+            "Best diff",
+            justify="center",
+            no_wrap=True,
+            min_width=10,
+            footer=footer
+        )
 
-    best_lap_times = top_3_times[0, :]
-    diff = times - best_lap_times
     times = np.vstack((times, diff))
-
-    colors = ("bright_red", "bright_cyan")
 
     for col in times.T:
         if len(names) == 2:
